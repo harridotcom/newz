@@ -33,6 +33,8 @@ fun FavoritePage(
     val context = LocalContext.current
     authViewModel.authState.observeAsState()
     val auth = FirebaseAuth.getInstance()
+    val favorites by mainViewModel.liveDataDb.observeAsState(initial = emptyList())
+
     var isFavorite by remember {
         mutableStateOf(false)
     }
@@ -44,8 +46,9 @@ fun FavoritePage(
         isFavorite = true
         try {
             val userId = auth.currentUser!!.uid
-            val favorites = mainViewModel.getFavoriteNews(userId)
+            mainViewModel.getFavoriteNews(userId)
             favoriteNews = favorites
+
         } catch (e: Exception) {
             Log.e("Fav", "Error fetching favorites", e)
         }
