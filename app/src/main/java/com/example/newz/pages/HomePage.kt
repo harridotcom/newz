@@ -1,27 +1,22 @@
 package com.example.newz.pages
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -34,9 +29,7 @@ import androidx.navigation.NavController
 import com.example.newz.api.NewsList
 import com.example.newz.other.BottomNavView
 import com.example.newz.other.NewsListScreen
-import com.example.newz.other.Repository
 import com.example.newz.other.TopNavView
-import com.example.newz.room.RoomDb
 import com.example.newz.vms.AuthState
 import com.example.newz.vms.AuthViewModel
 import com.example.newz.vms.MainViewModel
@@ -52,10 +45,42 @@ fun HomePage(
 ) {
     var newsList by remember { mutableStateOf<NewsList?>(null) }
     var isLoading by remember { mutableStateOf(true) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
     val authState = authViewModel.authState.observeAsState()
     val auth = FirebaseAuth.getInstance()
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+
+    // Handle back button press
+    BackHandler {
+        showLogoutDialog = true
+    }
+
+    // Logout confirmation dialog
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            title = { Text("Confirm Logout") },
+            text = { Text("Are you sure you want to logout?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showLogoutDialog = false
+                        authViewModel.SignOut()
+                    }
+                ) {
+                    Text("Yes")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showLogoutDialog = false }
+                ) {
+                    Text("No")
+                }
+            }
+        )
+    }
 
     LaunchedEffect(key1 = authState.value) {
         when(authState.value) {
@@ -87,7 +112,7 @@ fun HomePage(
                 title = "Daily News",
                 actions = {
                     IconButton(onClick = {
-                        authViewModel.SignOut()
+                        showLogoutDialog = true
                     }) {
                         Icon(
                             imageVector = Icons.Default.ExitToApp,
