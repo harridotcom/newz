@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -84,6 +85,9 @@ dependencies {
     implementation (libs.androidx.room.ktx)
     implementation (libs.gson) // Use the latest version available
     implementation (libs.androidx.material.icons.extended)
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation (libs.gson)
 
 }
 kapt {

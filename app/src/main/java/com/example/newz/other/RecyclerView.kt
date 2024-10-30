@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 import com.example.newz.room.FavoriteNews
 import com.example.newz.room.NewsDao
 import com.example.newz.vms.MainViewModel
@@ -39,13 +40,20 @@ fun NewsListScreen(
     newsList: NewsList,
     mainViewModel: MainViewModel,
     auth: FirebaseAuth,
-    isFavoriteNews: Boolean
+    isFavoriteNews: Boolean,
+    navController: NavController
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth()
     ) {
         items(newsList.results) { news ->
-            NewsCard(news = news, mainViewModel = mainViewModel, auth = auth, isFavoriteNews = isFavoriteNews)
+            NewsCard(
+                news = news,
+                mainViewModel = mainViewModel,
+                auth = auth,
+                isFavoriteNews = isFavoriteNews,
+                navController = navController
+            )
         }
     }
 }
@@ -56,7 +64,8 @@ fun NewsCard(
     news: Result,
     mainViewModel: MainViewModel,
     auth: FirebaseAuth,
-    isFavoriteNews: Boolean
+    isFavoriteNews: Boolean,
+    navController: NavController
 ) {
     val scope = rememberCoroutineScope()
 
@@ -65,10 +74,7 @@ fun NewsCard(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                news.link.let {
-                    link ->
-                    OnNewsCardClicked(link)
-                }
+                navController.navigate("article/${news.article_id}")
             },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

@@ -34,6 +34,7 @@ import com.example.newz.vms.AuthState
 import com.example.newz.vms.AuthViewModel
 import com.example.newz.vms.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @Composable
@@ -55,6 +56,7 @@ fun HomePage(
     BackHandler {
         showLogoutDialog = true
     }
+
 
     // Logout confirmation dialog
     if (showLogoutDialog) {
@@ -179,7 +181,8 @@ fun HomePage(
                             mainViewModel = mainViewModel,
                             auth = auth,
                             isFavoriteNews = false,
-                            modifier = Modifier.padding(horizontal = 16.dp)
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            navController = navController
                         )
                     } ?: run {
                         Box(

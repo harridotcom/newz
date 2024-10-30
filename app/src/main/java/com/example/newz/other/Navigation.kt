@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.newz.pages.ArticlePage
 import com.example.newz.pages.FavoritePage
 import com.example.newz.pages.HomePage
 import com.example.newz.pages.LoginPage
@@ -35,6 +36,12 @@ fun Navigation(authViewModel: AuthViewModel, repository: Repository, mainViewMod
         composable("search"){
             SearchPage(navController = navController)
         }
-
+        composable("article/{articleId}"){
+                backStackEntry ->
+            val articleId = backStackEntry.arguments?.getString("articleId")
+            if (articleId != null) {
+                ArticlePage(articleId = articleId, mainViewModel = mainViewModel, navController = navController)
+            }
+        }
     }
 }

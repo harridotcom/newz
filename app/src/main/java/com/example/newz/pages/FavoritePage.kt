@@ -108,7 +108,7 @@ fun FavoritePage(
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             if (favoriteNews.isNotEmpty()) {
-                NewsListScreen(newsList = newsList, mainViewModel = mainViewModel, auth = auth, isFavoriteNews = isFavorite)
+                NewsListScreen(newsList = newsList, mainViewModel = mainViewModel, auth = auth, isFavoriteNews = isFavorite, navController = navController)
             } else {
                 Text(
                     text = "No favorite news found",
